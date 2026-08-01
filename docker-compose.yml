@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  forgeflow-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/forgeflowdb
+      - SPRING_DATASOURCE_USERNAME=forgeuser
+      - SPRING_DATASOURCE_PASSWORD=forgepass
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: forgeflowdb
+      POSTGRES_USER: forgeuser
+      POSTGRES_PASSWORD: forgepass
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
